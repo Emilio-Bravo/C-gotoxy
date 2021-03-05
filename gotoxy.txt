@@ -1,0 +1,52 @@
+#include <windows.h>
+#include <conio.h> /*!No es necesaria para la función gotoxy!*/
+
+/* Constantes */
+#define UP 'w'
+#define LEFT 'a'
+#define DOWN 's'
+#define RIGHT 'd'
+
+/*
+    Función gotoxy
+
+    1.- Obtener el identificador de sakida de la ventana mediante HANDLE
+    2.- Crear objeto COORD y asignarle valores a sus propiedades (X)(Y)
+    3.- Usar la función SetConsoleCursorPosition y pasarle como parametros el HANDLE Y el objeto COORD
+*/
+
+void gotoxy(int x, int y)
+{
+    HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE); //Obteniendo el identificador de la ventana
+    COORD coord; //Instanciando el objeto COORD
+    coord.X = x; //Asignando el valor obtenido de los parametros a su propiedad X
+    coord.Y = y; //Asignando el valor obtenido de los parametros a su propiedad Y
+    SetConsoleCursorPosition(hCon,coord); //Invocando a la función SetConsoleCursorPosition y asignandole a sus parametros los valores correspondientes
+}
+
+/*Ejemplo de uso de la función gotoxy*/
+
+void kb_event()
+{
+
+    int x = 2,y = 2; //Valor inicial para evitar que se coloque en la esquina de la consola
+    while (!false) //Bucle infinito que permitira que el programa se ejecute todo el tiempo
+    {
+        gotoxy(x,y); //Realizando la función gotoxy en cada iteración y en caso de modifacarse los valores de las variables (x)(y) aplicar sus nuevos valores
+        if (kbhit()) //Uso de la libreria conio.h para esta función consulta esta libreria en: https://geometrid-competiti.000webhostapp.com/index.php?controller=article&action=complete&id=4
+        {
+            char key_pressed = getch(); //Función de conio.h
+            /*Evaluando tecla presionada y modifcando las coordenadas en base en la tecla presionada*/
+            if (key_pressed == UP) y--;
+            if (key_pressed == DOWN) y++;
+            if (key_pressed == RIGHT) x++;
+            if (key_pressed == LEFT) x--;
+        }
+        putch('*'); //Función de conio.h | Imprimiendo un * por cada iteración
+    }
+}
+int main()
+{
+    kb_event();
+    return 0;
+}
